@@ -23,13 +23,20 @@ public class DBsample1 {
         String username=System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
         String password=System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
         String name ="dbsample";
-        String url="jdbc:mysql://"+host+";"+port+"/"+name;
+        String url="jdbc:mysql://"+host+":"+port+"/"+name;
         return DriverManager.getConnection(url,username,password);
     }
     public static String getTable(){
         String output="";
         try {
             Connection conn=getConnection();
+            Statement stmt=conn.createStatement();
+            ResultSet rs=stmt.executeQuery("SELECT * FROM people");
+            while (rs.next()){
+                output +="<h2>"+rs.getString("name")+"</h2>";
+                       output +="<p>"+rs.getString("bio")+"</p>";
+                
+            }
             
             conn.close();
         } catch (SQLException ex) {
